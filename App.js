@@ -1,20 +1,69 @@
-import { StatusBar } from 'expo-status-bar';
+import 'react-native-gesture-handler';
+import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { enableScreens } from 'react-native-screens';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { PrincipalStack } from './componentes/Navigation';
+import { MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import PoliticaPrivacidad from './componentes/Anexos/PoliticaPrivacidad';
+import DescargoResponsabilidad from './componentes/Anexos/DescargoResponsabilidad';
 
-export default function App() {
+enableScreens();
+const Drawer = createDrawerNavigator();
+const App = ({navigation}) => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    
+      <NavigationContainer>
+        <Drawer.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}
+        >
+          <Drawer.Screen
+            name="Inicio"
+            component={PrincipalStack}
+            options={{
+              drawerIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="home" size={size} color={color} />
+              ), drawerLabelStyle: {
+                fontSize: 20,
+              }
+            }}
+          />
+          <Drawer.Screen
+            name="Politica"
+            component={PoliticaPrivacidad}
+            options={{
+              drawerIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="shield-account" size={size} color={color} />
+              ), drawerLabelStyle: {
+                fontSize: 20,
+              }
+            }}
+          />
+          <Drawer.Screen
+            name="Isenção"
+            component={DescargoResponsabilidad}
+            options={{
+              drawerIcon: ({ color, size }) => (
+                <MaterialCommunityIcons name="alert-circle-outline" size={size} color={color} />
+              ), drawerLabelStyle: {
+                fontSize: 20,
+              }
+            }}
+          />
+        </Drawer.Navigator>
+      </NavigationContainer>
+    
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  },
+  datos:{
+    backgroundColor:"red",
   },
 });
+
+export default App;
