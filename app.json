@@ -27,7 +27,7 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "package": "com.sigleto.Ferramentas",
-      "versionCode": 5
+      "versionCode": 6
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -36,10 +36,12 @@
       "eas": {
         "projectId": "dbcdea1c-0208-447a-b70a-5207ea814779"
       }
-    }
+    },
+    "plugins": [
+      "react-native-google-mobile-ads"
+    ]
   },
   "react-native-google-mobile-ads": {
     "android_app_id": "ca-app-pub-6921150380725872~1131510380"
-    
   }
 }
