@@ -1,172 +1,198 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
-import { Input } from 'react-native-elements';
-import { Picker } from '@react-native-picker/picker';
-import Anuncio from '../Anexos/Anuncio';
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { Input } from "react-native-elements";
+import { Picker } from "@react-native-picker/picker";
+import Anuncio from "../Anexos/Anuncio";
+import { useNavigation } from "@react-navigation/native";
 
+const API_KEY = process.env.API_KEY;
 
-const monedas = [
-  { codigo: 'USD', nombre: 'Dólar estadounidense' },
-  { codigo: 'EUR', nombre: 'Euro' },
-  { codigo: 'AUD', nombre: 'Dólar australiano' },
-  { codigo: 'ARS', nombre: 'Peso argentino' },
-  { codigo: 'UYU', nombre: 'Peso uruguayo' },
-  { codigo: 'CLP', nombre: 'Peso chileno' },
-  { codigo: 'COP', nombre: 'Peso colombiano' },
-  { codigo: 'PEN', nombre: 'Sol peruano' },
-  { codigo: 'PYG', nombre: 'Guaraní paraguayo' },
-  { codigo: 'CRC', nombre: 'Colón costarricense' },
-  { codigo: 'MXN', nombre: 'Peso mexicano' },
-  { codigo: 'BGN', nombre: 'Lev búlgaro' },
-  { codigo: 'BRL', nombre: 'Real brasileño' },
-  { codigo: 'CAD', nombre: 'Dólar canadiense' },
-  { codigo: 'CHF', nombre: 'Franco suizo' },
-  { codigo: 'CNY', nombre: 'Yuan chino' },
-  { codigo: 'CZK', nombre: 'Corona checa' },
-  { codigo: 'DKK', nombre: 'Corona danesa' },
-  { codigo: 'GBP', nombre: 'Libra esterlina' },
-  { codigo: 'HKD', nombre: 'Dólar de Hong Kong' },
-  { codigo: 'HRK', nombre: 'Kuna croata' },
-  { codigo: 'HUF', nombre: 'Florín húngaro' },
-  { codigo: 'IDR', nombre: 'Rupia indonesia' },
-  { codigo: 'ILS', nombre: 'Nuevo séquel israelí' },
-  { codigo: 'INR', nombre: 'Rupia india' },
-  { codigo: 'ISK', nombre: 'Corona islandesa' },
-  { codigo: 'JPY', nombre: 'Yen japonés' },
-  { codigo: 'KRW', nombre: 'Won surcoreano' },
-  { codigo: 'MYR', nombre: 'Ringgit malasio' },
-  { codigo: 'NOK', nombre: 'Corona noruega' },
-  { codigo: 'NZD', nombre: 'Dólar neozelandés' },
-  { codigo: 'PHP', nombre: 'Peso filipino' },
-  { codigo: 'PLN', nombre: 'Złoty polaco' },
-  { codigo: 'RON', nombre: 'Leu rumano' },
-  { codigo: 'RUB', nombre: 'Rublo ruso' },
-  { codigo: 'SEK', nombre: 'Corona sueca' },
-  { codigo: 'SGD', nombre: 'Dólar singapurense' },
-  { codigo: 'THB', nombre: 'Baht tailandés' },
-  { codigo: 'TRY', nombre: 'Lira turca' },
-  { codigo: 'ZAR', nombre: 'Rand sudafricano' },
+const moedas = [
+  { codigo: "USD", nome: "Dólar americano" },
+  { codigo: "EUR", nome: "Euro" },
+  { codigo: "AUD", nome: "Dólar australiano" },
+  { codigo: "ARS", nome: "Peso argentino" },
+  { codigo: "UYU", nome: "Peso uruguaio" },
+  { codigo: "CLP", nome: "Peso chileno" },
+  { codigo: "COP", nome: "Peso colombiano" },
+  { codigo: "PEN", nome: "Sol peruano" },
+  { codigo: "PYG", nome: "Guarani paraguaio" },
+  { codigo: "CRC", nome: "Colón costarriquenho" },
+  { codigo: "MXN", nome: "Peso mexicano" },
+  { codigo: "BGN", nome: "Lev búlgaro" },
+  { codigo: "BRL", nome: "Real brasileiro" },
+  { codigo: "CAD", nome: "Dólar canadense" },
+  { codigo: "CHF", nome: "Franco suíço" },
+  { codigo: "CNY", nome: "Yuan chinês" },
+  { codigo: "CZK", nome: "Coroa checa" },
+  { codigo: "DKK", nome: "Coroa dinamarquesa" },
+  { codigo: "GBP", nome: "Libra esterlina" },
+  { codigo: "HKD", nome: "Dólar de Hong Kong" },
+  { codigo: "HRK", nome: "Kuna croata" },
+  { codigo: "HUF", nome: "Florim húngaro" },
+  { codigo: "IDR", nome: "Rupia indonésia" },
+  { codigo: "ILS", nome: "Novo shekel israelense" },
+  { codigo: "INR", nome: "Rupia indiana" },
+  { codigo: "ISK", nome: "Coroa islandesa" },
+  { codigo: "JPY", nome: "Iene japonês" },
+  { codigo: "KRW", nome: "Won sul-coreano" },
+  { codigo: "MYR", nome: "Ringgit malaio" },
+  { codigo: "NOK", nome: "Coroa norueguesa" },
+  { codigo: "NZD", nome: "Dólar neozelandês" },
+  { codigo: "PHP", nome: "Peso filipino" },
+  { codigo: "PLN", nome: "Złoty polonês" },
+  { codigo: "RON", nome: "Leu romeno" },
+  { codigo: "RUB", nome: "Rublo russo" },
+  { codigo: "SEK", nome: "Coroa sueca" },
+  { codigo: "SGD", nome: "Dólar singapuriano" },
+  { codigo: "THB", nome: "Baht tailandês" },
+  { codigo: "TRY", nome: "Lira turca" },
+  { codigo: "ZAR", nome: "Rand sul-africano" },
 ];
 
-export default function ConversorDivisas() {
-  const [monedaOrigen, setMonedaOrigen] = useState('USD');
-  const [monedaDestino, setMonedaDestino] = useState('EUR');
-  const [tipoCambio, setTipoCambio] = useState('');
-  const [resultado, setResultado] = useState('');
-  const [mostrarPantallaNumeros, setMostrarPantallaNumeros] = useState(true);
-  const [cantidadIntroducida, setCantidadIntroducida] = useState('');
-  const [mensajeEstado, setMensajeEstado] = useState('');
+export default function ConversorMoedas() {
+  const [moedaOrigem, setMoedaOrigem] = useState("USD");
+  const [moedaDestino, setMoedaDestino] = useState("EUR");
+  const [taxaCambio, setTaxaCambio] = useState("");
+  const [resultado, setResultado] = useState("");
+  const [mostrarTelaNumerica, setMostrarTelaNumerica] = useState(true);
+  const [quantidadeIntroduzida, setQuantidadeIntroduzida] = useState("");
+  const [mensagemEstado, setMensagemEstado] = useState("");
+  const [erro, setErro] = useState("");
 
-  const API_KEY = 'd93ad7934d4b03cf5de6577a';
-
-  const obtenerTipoCambio = async () => {
+  const obterTaxaCambio = async () => {
     try {
       const response = await fetch(
-        `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${monedaOrigen}`
+        `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${moedaOrigem}`
       );
       const data = await response.json();
 
       if (response.ok) {
-        if (data && data.conversion_rates && data.conversion_rates[monedaDestino]) {
-          const tasaCambio = data.conversion_rates[monedaDestino];
-          setTipoCambio(tasaCambio.toString());
-          setMensajeEstado(`Quantidade inserida: ${cantidadIntroducida} ${monedaOrigen}`);
+        if (
+          data &&
+          data.conversion_rates &&
+          data.conversion_rates[moedaDestino]
+        ) {
+          const taxaCambio = data.conversion_rates[moedaDestino];
+          setTaxaCambio(taxaCambio.toString());
+          setMensagemEstado(
+            `Quantidade introduzida: ${quantidadeIntroduzida} ${moedaOrigem}`
+          );
+          setErro(""); // Limpar qualquer erro anterior
         } else {
-          console.error('Erro: a moeda de origem ou de destino não está disponível.');
+          setErro("Erro: A moeda de origem ou destino não está disponível.");
         }
       } else {
-        console.error('Erro ao obter a taxa de câmbio');
+        setErro("Erro ao obter a taxa de câmbio");
       }
     } catch (error) {
-      console.error('Erro na solicitação de taxa de câmbio:', error);
+      setErro("Erro na solicitação da taxa de câmbio");
     }
   };
 
+  const converterMoedas = () => {
+    if (taxaCambio === "") {
+      setErro("Primeiro você deve obter a taxa de câmbio");
+      return;
+    }
 
-  const convertirDivisas = () => {
-    const cantidadFloat = parseFloat(cantidadIntroducida);
-    const resultadoCalculado = cantidadFloat * parseFloat(tipoCambio);
+    setErro(""); // Limpar a mensagem de erro se existir
+    const quantidadeFloat = parseFloat(quantidadeIntroduzida);
+    const resultadoCalculado = quantidadeFloat * parseFloat(taxaCambio);
     setResultado(resultadoCalculado.toFixed(2).toString());
   };
 
-  const ocultarPantallaNumeros = () => {
-    setMostrarPantallaNumeros(false);
+  const ocultarTelaNumerica = () => {
+    setMostrarTelaNumerica(false);
   };
 
-  const navigation=useNavigation()
-  const volver=()=>{navigation.navigate('Home')}
+  const navigation = useNavigation();
+  const voltar = () => {
+    navigation.navigate("Home");
+  };
+  console.log(
+    `https://v6.exchangerate-api.com/v6/${API_KEY}/latest/${moedaOrigem}`
+  );
   return (
     <View style={styles.container}>
-      <Anuncio/>
-      {/* Cantidad a convertir */}
-      {mostrarPantallaNumeros && (
+      <Anuncio />
+      {mostrarTelaNumerica && (
         <>
-          <Text style={styles.label}>Valor para converter</Text>
+          <Text style={styles.label}>Quantidade a converter</Text>
           <Input
             keyboardType="numeric"
-            value={cantidadIntroducida}
-            onChangeText={(text) => setCantidadIntroducida(text)}
-            inputStyle={{ fontSize: 20, color: 'olive' }}
+            value={quantidadeIntroduzida}
+            onChangeText={(text) => setQuantidadeIntroduzida(text)}
+            inputStyle={{ fontSize: 20, color: "olive" }}
             style={styles.input}
             autoFocus={true}
           />
         </>
       )}
-      {/* Moneda de origen */}
       <Text style={styles.label}>Moeda de origem</Text>
       <Picker
         style={{ height: 50, width: 200 }}
-        selectedValue={monedaOrigen}
-        onValueChange={(itemValue) => setMonedaOrigen(itemValue)}
+        selectedValue={moedaOrigem}
+        onValueChange={(itemValue) => setMoedaOrigem(itemValue)}
       >
-        {monedas.map((moneda) => (
-          <Picker.Item key={moneda.codigo} label={moneda.nombre} value={moneda.codigo} />
+        {moedas.map((moeda) => (
+          <Picker.Item
+            key={moeda.codigo}
+            label={moeda.nome}
+            value={moeda.codigo}
+          />
         ))}
       </Picker>
 
-      {/* Moneda de destino */}
       <Text style={styles.label}>Moeda de destino</Text>
       <Picker
         style={{ height: 50, width: 200 }}
-        selectedValue={monedaDestino}
-        onValueChange={(itemValue) => setMonedaDestino(itemValue)}
+        selectedValue={moedaDestino}
+        onValueChange={(itemValue) => setMoedaDestino(itemValue)}
       >
-        {monedas.map((moneda) => (
-          <Picker.Item key={moneda.codigo} label={moneda.nombre} value={moneda.codigo} />
+        {moedas.map((moeda) => (
+          <Picker.Item
+            key={moeda.codigo}
+            label={moeda.nome}
+            value={moeda.codigo}
+          />
         ))}
       </Picker>
 
-      {/* Obtener Tipo de Cambio */}
-      <TouchableOpacity onPress={() => { obtenerTipoCambio(); ocultarPantallaNumeros(); }} style={styles.touchableButton}>
-        <Text style={styles.buttonText}>Obter a taxa de cambio</Text>
+      <TouchableOpacity
+        onPress={() => {
+          obterTaxaCambio();
+        }}
+        style={styles.touchableButton}
+      >
+        <Text style={styles.buttonText}>Obter Taxa de Câmbio</Text>
       </TouchableOpacity>
-      {tipoCambio !== '' && (
-      <View>
-        <Text style={styles.resultText}>{mensajeEstado}</Text>
-        <Text style={styles.resultText}>
-        
-          Taxa de cambio: 1 {monedaOrigen} = {tipoCambio} {monedaDestino}
-        </Text>
+      {taxaCambio !== "" && (
+        <View>
+          <Text style={styles.resultText}>{mensagemEstado}</Text>
+          <Text style={styles.resultText}>
+            Taxa de Câmbio: 1 {moedaOrigem} = {taxaCambio} {moedaDestino}
+          </Text>
         </View>
       )}
-      
-      {/* Convertir */}
-      <TouchableOpacity onPress={convertirDivisas} style={styles.touchableButton}>
+
+      {erro !== "" && <Text style={styles.errorText}>{erro}</Text>}
+
+      <TouchableOpacity
+        onPress={converterMoedas}
+        style={styles.touchableButton}
+      >
         <Text style={styles.buttonText}>Converter</Text>
       </TouchableOpacity>
-      {resultado !== '' && (
+      {resultado !== "" && (
         <Text style={styles.resultText}>
-          Resultado: {resultado} {monedaDestino}
+          Resultado: {resultado} {moedaDestino}
         </Text>
       )}
 
-<TouchableOpacity
-  onPress={volver}
-  style={styles.touchableButtonV}
->
-  <Text style={styles.buttonTextV}>RETORNAR</Text>
-</TouchableOpacity>
+      <TouchableOpacity onPress={voltar} style={styles.touchableButtonV}>
+        <Text style={styles.buttonTextV}>VOLTAR</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -174,47 +200,52 @@ export default function ConversorDivisas() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: "#fffbde",
   },
   input: {
     marginBottom: 18,
-    textAlign: 'center',
+    textAlign: "center",
     fontSize: 26,
   },
   touchableButton: {
     marginVertical: 10,
-    backgroundColor: '#555ff7',
+    backgroundColor: "#555ff7",
     paddingHorizontal: 27,
     marginTop: 20,
   },
   buttonText: {
     fontSize: 22,
-    color: '#f4f8f8',
+    color: "#f4f8f8",
   },
   buttonTextV: {
-    fontSize: 15,
-    color: 'white',
+    fontSize: 25,
+    color: "white",
   },
   resultText: {
     marginTop: 20,
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#007BFF',
+    fontWeight: "bold",
+    color: "#007BFF",
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
   },
-   touchableButtonV: {
+  touchableButtonV: {
     marginVertical: 10,
-    backgroundColor: 'olive',
-    paddingHorizontal:5,
+    backgroundColor: "olive",
+    paddingHorizontal: 5,
     marginTop: 25,
     borderRadius: 10,
-    alignSelf: 'center',
-
+    alignSelf: "center",
+  },
+  errorText: {
+    color: "red",
+    fontSize: 16,
+    marginTop: 10,
+    textAlign: "center",
   },
 });

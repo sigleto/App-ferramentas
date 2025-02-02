@@ -1,48 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Input } from 'react-native-elements';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { Input } from "react-native-elements";
 import { useNavigation } from "@react-navigation/native";
-import { Picker } from '@react-native-picker/picker';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+import { Picker } from "@react-native-picker/picker";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
 
 const CalculadoraInversiones = () => {
-  const [principal, setPrincipal] = useState('');
-  const [rate, setRate] = useState('');
-  const [time, setTime] = useState('');
-  const [contributions, setContributions] = useState('0');
-  const [tipoInteres, setTipoInteres] = useState('anual');
-  const [unidadPeriodo, setUnidadPeriodo] = useState('años');
+  const [principal, setPrincipal] = useState("");
+  const [rate, setRate] = useState("");
+  const [time, setTime] = useState("");
+  const [contributions, setContributions] = useState("0");
+  const [tipoInteres, setTipoInteres] = useState("anual");
+  const [unidadPeriodo, setUnidadPeriodo] = useState("años");
   const navigation = useNavigation();
 
   const calcularCuota = () => {
     if (!principal || !rate || !time || !contributions) {
-      alert('Por favor, completa todos los campos.');
+      alert("Por favor, completa todos los campos.");
     } else {
       const rateNumber = parseFloat(rate);
       navigation.navigate("ResultadoInversiones", {
         principal: principal,
-        rate:rateNumber,
-        time:time,
+        rate: rateNumber,
+        time: time,
         contributions: contributions,
         tipoInteres: tipoInteres,
         unidadPeriodo: unidadPeriodo,
       });
     }
   };
- 
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/5522660465';
+
+  const adUnitId = __DEV__
+    ? TestIds.ADAPTIVE_BANNER
+    : "ca-app-pub-6921150380725872/5522660465";
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-       <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
-      <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.container}
+      >
         <Text style={styles.labelA}>Calculadora de Inverstimento</Text>
-        
 
         <View style={styles.inputContainer}>
           <View style={styles.row}>
@@ -57,26 +70,29 @@ const CalculadoraInversiones = () => {
           </View>
 
           <View style={styles.row}>
-        <Text style={styles.label}>Juro (%)</Text>
-         <View style={styles.pickerContainer}>
-           <TextInput
-          style={styles.input}
-          keyboardType="numeric"
-          value={rate}
-          onChangeText={(text) => setRate(text)}
-          textAlign="center"
-    />
-    <Picker
-      selectedValue={tipoInteres}
-      style={[styles.picker, (tipoInteres === 'anual') && styles.pickerSelectedItem]}
-      onValueChange={(itemValue) => setTipoInteres(itemValue)}
-      mode='dropdown'
-    >
-      <Picker.Item label="Anual" value="anual" />
-      <Picker.Item label="Mensal" value="mensual" />
-    </Picker>
-  </View>
-</View>
+            <Text style={styles.label}>Juro (%)</Text>
+            <View style={styles.pickerContainer}>
+              <TextInput
+                style={styles.input}
+                keyboardType="numeric"
+                value={rate}
+                onChangeText={(text) => setRate(text)}
+                textAlign="center"
+              />
+              <Picker
+                selectedValue={tipoInteres}
+                style={[
+                  styles.picker,
+                  tipoInteres === "anual" && styles.pickerSelectedItem,
+                ]}
+                onValueChange={(itemValue) => setTipoInteres(itemValue)}
+                mode="dropdown"
+              >
+                <Picker.Item label="Anual" value="anual" />
+                <Picker.Item label="Mensal" value="mensual" />
+              </Picker>
+            </View>
+          </View>
 
           <View style={styles.row}>
             <Text style={styles.label}>Duração</Text>
@@ -93,7 +109,7 @@ const CalculadoraInversiones = () => {
                 selectedValue={unidadPeriodo}
                 style={styles.picker}
                 onValueChange={(itemValue) => setUnidadPeriodo(itemValue)}
-                mode='dropdown'
+                mode="dropdown"
               >
                 <Picker.Item label="Anos" value="años" />
                 <Picker.Item label="Meses" value="meses" />
@@ -109,16 +125,21 @@ const CalculadoraInversiones = () => {
               value={contributions}
               onChangeText={(text) => setContributions(text)}
               textAlign="center"
-              
             />
           </View>
         </View>
 
-        <TouchableOpacity style={styles.touchableButton} onPress={calcularCuota}>
+        <TouchableOpacity
+          style={styles.touchableButton}
+          onPress={calcularCuota}
+        >
           <Text style={styles.buttonText}>Calcular</Text>
         </TouchableOpacity>
+        <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        />
       </ScrollView>
-      
     </KeyboardAvoidingView>
   );
 };
@@ -128,71 +149,71 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
+    backgroundColor: "#fffbde",
+    marginTop: -200,
   },
   row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   pickerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   inputContainer: {
-    width: '100%',
+    width: "100%",
     marginTop: 30,
   },
   input: {
     flex: 1,
     marginLeft: 6,
     borderWidth: 2,
-    borderColor: '#555ff7',
+    borderColor: "#555ff7",
     borderRadius: 10,
     padding: 8,
     fontSize: 18,
-    width:'45%',
+    width: "45%",
   },
   picker: {
     height: 50,
-    width: '45%',
-    color: '#02009c',
-    fontWeight: '200',
+    width: "45%",
+    color: "#02009c",
+    fontWeight: "200",
     borderRadius: 10,
     paddingVertical: 5, // Espaciado vertical para mejorar la apariencia
   },
   touchableButton: {
-    backgroundColor: '#555ff7',
+    backgroundColor: "#555ff7",
     paddingHorizontal: 27,
     marginTop: 20,
     borderRadius: 10,
+    marginBottom: 90,
   },
   buttonText: {
     fontSize: 22,
-    color: '#f4f8f8',
-    textAlign: 'center',
+    color: "#f4f8f8",
+    textAlign: "center",
   },
   label: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 20,
     marginBottom: 15,
-    color: 'olive',
+    color: "olive",
   },
   labelA: {
-    fontWeight: 'bold',
+    fontWeight: "bold",
     fontSize: 22,
     marginBottom: 15,
-    color: 'black',
-    marginTop:20,
-    textAlign:'center'
+    color: "black",
+    marginTop: 20,
+    textAlign: "center",
   },
   pickerSelectedItem: {
     borderBottomWidth: 2, // Agrega un subrayado
-  borderBottomColor: '#555ff7', // Color del subrayado
+    borderBottomColor: "#555ff7", // Color del subrayado
   },
-  
-  
 });
 
 export default CalculadoraInversiones;

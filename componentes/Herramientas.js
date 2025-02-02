@@ -1,80 +1,167 @@
-import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet,ScrollView} from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-
+import React from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
 
 const Herramientas = () => {
   const navigation = useNavigation();
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/5522660465';
-  const navigateToHerramientas = (ruta) => {
-    navigation.navigate(ruta);
+  const adUnitId = __DEV__
+    ? TestIds.ADAPTIVE_BANNER
+    : "ca-app-pub-6921150380725872/2360831572";
+
+  const navigateToHerramientas = (rota) => {
+    navigation.navigate(rota);
   };
 
-  const opciones = [
-    { nombre: 'CALCULADORA DE EMPRÉSTIMO', ruta: 'Prestamo' },
-    { nombre: 'CALCULADORA DE POUPANÇA', ruta: 'Ahorros' },
-    { nombre: 'CALCULADORA DE INVESTIMENTO', ruta: 'CalculadoraInversiones' },
-    { nombre: 'CONVERSOR DE MOEDA', ruta: 'Divisa' },
-    { nombre: 'DESEMPENHO DE APOSENTADORIA', ruta: 'Jubilacion' },
-    
-    
-    
+  const opcoes = [
+    {
+      nome: "CALCULADORA DE EMPRÉSTIMOS",
+      rota: "Prestamo",
+      icone: "calculator",
+    },
+    {
+      nome: "CALCULADORA DE POUPANÇA",
+      rota: "Ahorros",
+      icone: "piggy-bank",
+    },
+    {
+      nome: "CALCULADORA DE INVESTIMENTOS",
+      rota: "CalculadoraInversiones",
+      icone: "chart-line",
+    },
+    {
+      nome: "CONVERSOR DE MOEDAS",
+      rota: "Divisa",
+      icone: "currency-usd",
+    },
+    {
+      nome: "COTAÇÃO DE AÇÕES NY",
+      rota: "Acciones",
+      icone: "finance",
+    },
+    {
+      nome: "RENDIMENTO PARA APOSENTADORIA",
+      rota: "Jubilacion",
+      icone: "cash-multiple",
+    },
+    {
+      nome: "RENDA IMEDIATA",
+      rota: "CalculadoraRentaInmediata",
+      icone: "cash-multiple",
+    },
+    {
+      nome: "SIMULADORES HIPOTECÁRIOS",
+      rota: "SimuladoresHipotecarios",
+      icone: "cash-multiple",
+    },
   ];
 
   return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.tituloOrg}>Escolha a ferramenta a ser usada</Text>
-      <BannerAd
-      unitId={adUnitId}
-      size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-    />
-      <View style={styles.organismos}>
-        {opciones.map((opcion) => (
+    <SafeAreaView style={styles.safeArea}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+        <View style={styles.headerContainer}>
           <TouchableOpacity
-            key={opcion.ruta}
-            style={styles.opcion}
-            onPress={() => navigateToHerramientas(opcion.ruta)}
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
           >
-            <Text style={styles.opcionTexto}>{opcion.nombre}</Text>
+            <MaterialCommunityIcons name="arrow-left" size={24} color="#333" />
           </TouchableOpacity>
-        ))}
-      </View>
-    </ScrollView>
+          <Text style={styles.tituloOrg}>Ferramentas Financeiras</Text>
+        </View>
+
+        <View style={styles.organismos}>
+          {opcoes.map((opcao) => (
+            <TouchableOpacity
+              key={opcao.rota}
+              style={styles.opcao}
+              onPress={() => navigateToHerramientas(opcao.rota)}
+            >
+              <MaterialCommunityIcons
+                name={opcao.icone}
+                size={24}
+                color="#fff"
+                style={styles.opcaoIcone}
+              />
+              <Text style={styles.opcaoTexto}>{opcao.nome}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+        <BannerAd
+          unitId={adUnitId}
+          size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+          style={styles.bannerAd}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    backgroundColor: "#f4f4f4",
+  },
   container: {
     flex: 1,
-    
+    backgroundColor: "#f4f4f4",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    marginBottom: 20,
+  },
+  backButton: {
+    marginRight: 15,
   },
   tituloOrg: {
     fontSize: 24,
+    fontWeight: "700",
+    color: "#333",
+  },
+  bannerAd: {
     marginBottom: 20,
-    marginTop:70,
-    textAlign:'center',
-    color:'#54722e',
-    textDecorationLine:'underline'
+    alignSelf: "center",
   },
   organismos: {
-    flexDirection: 'column',
-    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 80,
   },
-  opcion: {
-    display:'flex',
-    backgroundColor: 'lightblue',
-    padding: 10,
+  opcao: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#3498db",
+    padding: 15,
     marginVertical: 10,
-    borderRadius: 5,
-    width:250,
-    alignItems:'center'
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  opcionTexto: {
-    fontSize: 22,
-    fontWeight: 'bold',
+  opcaoIcone: {
+    marginRight: 15,
+  },
+  opcaoTexto: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#fff",
+    flexWrap: "wrap",
   },
 });
 
 export default Herramientas;
-

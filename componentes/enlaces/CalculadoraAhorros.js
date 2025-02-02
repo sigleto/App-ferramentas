@@ -1,20 +1,33 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView } from 'react-native';
-import { Input } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
-import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
-import { Picker} from '@react-native-picker/picker';
+import React, { useState } from "react";
+import {
+  Platform,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  KeyboardAvoidingView,
+} from "react-native";
+import { Input } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
+import {
+  BannerAd,
+  BannerAdSize,
+  TestIds,
+} from "react-native-google-mobile-ads";
+import { Picker } from "@react-native-picker/picker";
 
 export default function CalculadoraAhorros() {
-  const [meta, setMeta] = useState('');
-  const [tasaInteres, setTasaInteres] = useState('');
-  const [periodo, setPeriodo] = useState('');
-  const [tipoInteres, setTipoInteres] = useState('anual');
+  const [meta, setMeta] = useState("");
+  const [tasaInteres, setTasaInteres] = useState("");
+  const [periodo, setPeriodo] = useState("");
+  const [tipoInteres, setTipoInteres] = useState("anual");
   const navigation = useNavigation();
 
   const calcularCuota = () => {
     if (!meta || !tasaInteres || !periodo) {
-      alert('Por favor, preencha todos os campos');
+      alert("Por favor, preencha todos os campos");
     } else {
       navigation.navigate("ResultadoAhorro", {
         meta: meta,
@@ -25,21 +38,24 @@ export default function CalculadoraAhorros() {
     }
   };
 
-  const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-6921150380725872/5522660465';
-  
-
+  const adUnitId = __DEV__
+    ? TestIds.ADAPTIVE_BANNER
+    : "ca-app-pub-6921150380725872/5522660465";
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={{ flex: 1 }}
     >
-      <ScrollView keyboardShouldPersistTaps='handled' contentContainerStyle={styles.container}>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.container}
+      >
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Meta de poupança</Text>
           <Input
             keyboardType="numeric"
-            inputStyle={{ fontSize: 20, color: 'olive' }}
+            inputStyle={{ fontSize: 20, color: "olive" }}
             style={styles.input}
             onChangeText={(text) => setMeta(text)}
             autoFocus={true}
@@ -52,7 +68,7 @@ export default function CalculadoraAhorros() {
             <Input
               keyboardType="numeric"
               style={styles.input}
-              inputStyle={{ fontSize: 20, color: 'olive' }}
+              inputStyle={{ fontSize: 20, color: "olive" }}
               value={tasaInteres}
               onChangeText={(text) => setTasaInteres(text)}
             />
@@ -76,14 +92,19 @@ export default function CalculadoraAhorros() {
           <Input
             keyboardType="numeric"
             style={styles.input}
-            inputStyle={{ fontSize: 20, color: 'olive' }}
+            inputStyle={{ fontSize: 20, color: "olive" }}
             value={periodo}
             onChangeText={(text) => setPeriodo(text)}
           />
         </View>
 
-        <TouchableOpacity onPress={calcularCuota} style={styles.touchableButton}>
-          <Text style={styles.buttonText}>Calcular as economias necessárias</Text>
+        <TouchableOpacity
+          onPress={calcularCuota}
+          style={styles.touchableButton}
+        >
+          <Text style={styles.buttonText}>
+            Calcular as economias necessárias
+          </Text>
         </TouchableOpacity>
       </ScrollView>
       <BannerAd
@@ -99,12 +120,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: "center",
     paddingHorizontal: 20,
-    backgroundColor: '#fffbde',
-   
+    backgroundColor: "#fffbde",
   },
   rowContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 18,
   },
   halfContainer: {
@@ -112,27 +132,27 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginBottom: 10,
-    marginTop:30
+    marginTop: 30,
   },
   input: {
-    textAlign: 'center',
-    fontWeight: 'bold',
+    textAlign: "center",
+    fontWeight: "bold",
     borderWidth: 2,
     borderColor: "#555ff7",
     borderRadius: 10,
     padding: 10,
   },
-  
+
   touchableButton: {
     marginVertical: 10,
-    backgroundColor: '#555ff7',
+    backgroundColor: "#555ff7",
     paddingHorizontal: 27,
     marginTop: 5,
   },
   buttonText: {
     fontSize: 22,
-    color: '#f4f8f8',
-    textAlign:'center'
+    color: "#f4f8f8",
+    textAlign: "center",
   },
   label: {
     fontWeight: "bold",
@@ -140,9 +160,9 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 50,
-    width: '100%',
-    color: 'olive',
-    fontWeight: 'bold',
+    width: "100%",
+    color: "olive",
+    fontWeight: "bold",
     borderWidth: 2,
     borderColor: "#555ff7",
     borderRadius: 10,
